@@ -1,5 +1,4 @@
-import time
-import random
+import threading
 import tkinter as tk
 from tkinter import ttk
 import matplotlib.pyplot as plt
@@ -13,6 +12,13 @@ def randomize_array(canvas, ax):
     global data
     data = randomize()
     plotData(data=data, colorArray=['gray' for x in range(len(data))], canvas=canvas, ax=ax)
+    canvas.draw_idle()
+
+def start_sorting_thread(algorithm, data, canvas, ax):
+    global sorting_thread
+    if not sorting_thread.is_alive():
+        sorting_thread = threading.Thread(target=start_sorting, args=(algorithm, data, canvas, ax))
+        sorting_thread.start()
 
 def main():
 
@@ -43,10 +49,13 @@ def main():
 
     # Buttons for array manipulation and sorting
     tk.Button(control_frame, text="Randomize Array", command=lambda: randomize_array(canvas, ax), width=15).grid(row=0, column=1, padx=10, pady=10)
-    tk.Button(control_frame, text="Sort", command=lambda: start_sorting(algorithm.get(), data, canvas, ax), width=15).grid(row=0, column=2, padx=10, pady=10)
-    pause_resume_button = tk.Button(control_frame, text="Pause/Resume", command=lambda: None, width=15)
-    pause_resume_button.grid(row=0, column=3, padx=10, pady=10)
-    tk.Button(control_frame, text="Stop", command=lambda: None, width=15).grid(row=0, column=4, padx=10, pady=10)
+    tk.Button(control_frame, text="Sort", command=lambda: start_sorting_thread(algorithm.get(), data, canvas, ax), width=15).grid(row=0, column=2, padx=10, pady=10)
+    # pause_resume_button = tk.Button(control_frame, text="Pause/Resume", command=lambda: None, width=15)
+    # pause_resume_button.grid(row=0, column=3, padx=10, pady=10)
+    # tk.Button(control_frame, text="Stop", command=lambda: None, width=15).grid(row=0, column=4, padx=10, pady=10)
+
+    global sorting_thread
+    sorting_thread = threading.Thread(target=start_sorting, args=(algorithm.get(), data, canvas, ax))
 
     root.mainloop()
 

@@ -7,9 +7,16 @@ def randomize():
     return data
 
 def plotData(data, colorArray, canvas, ax):
-    ax.clear()
-    ax.bar(range(len(data)), data, color=colorArray)
-    ax.set_title("Sorting Algorithm Visualizer")
-    ax.set_xlabel("Index")
-    ax.set_ylabel("Value")
-    canvas.draw_idle()
+    # update only the height and color of the bars if they already exist
+    if not hasattr(plotData, "bars"):
+        ax.clear()
+        plotData.bars = ax.bar(range(len(data)), data, color=colorArray)
+        ax.set_title("Sorting Visualization")
+        ax.set_xlabel("Index")
+        ax.set_ylabel("Value")
+        canvas.draw_idle()
+    else:
+        for bar, height, color in zip(plotData.bars, data, colorArray):
+            bar.set_height(height)
+            bar.set_color(color)
+    
