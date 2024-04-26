@@ -9,3 +9,5 @@
 ## Install required packages
 `pip install -r requirements.txt`
 
+## Run the program
+`python main.py`
