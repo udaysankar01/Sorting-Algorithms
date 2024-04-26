@@ -1,5 +1,6 @@
 # Sorting Algorithms 
 
+This is a personal project to implement various sorting algorithms in Python. Tkinter and matplotlib libraries are used to create a GUI to visualize the sorting process.
 
 ## Create new conda environment
 `conda create --name sorting`
