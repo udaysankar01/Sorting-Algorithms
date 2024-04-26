@@ -1,4 +1,8 @@
 import random
+import threading
+
+pause_event = threading.Event()
+pause_event.set()
 
 def randomize():
     print("Randomize button pressed!")

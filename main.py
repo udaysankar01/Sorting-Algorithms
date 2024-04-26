@@ -6,7 +6,19 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from sort_algorithms import start_sorting
-from utils import randomize, plotData
+from utils import randomize, plotData, pause_event
+
+
+def toggle_pause_resume():
+    global toggle_pause_resume_button
+    if pause_event.is_set():
+        pause_event.clear()
+        toggle_pause_resume_button.config(text="Resume")
+        print("Pause button pressed!")
+    else:
+        pause_event.set()
+        toggle_pause_resume_button.config(text="Pause")
+        print("Resume button pressed!")
 
 def randomize_array(canvas, ax):
     global data
@@ -17,7 +29,7 @@ def randomize_array(canvas, ax):
 def start_sorting_thread(algorithm, data, canvas, ax):
     global sorting_thread
     if not sorting_thread.is_alive():
-        sorting_thread = threading.Thread(target=start_sorting, args=(algorithm, data, canvas, ax))
+        sorting_thread = threading.Thread(target=start_sorting, args=(algorithm, data, canvas, ax, pause_event))
         sorting_thread.start()
 
 def main():
@@ -50,9 +62,9 @@ def main():
     # Buttons for array manipulation and sorting
     tk.Button(control_frame, text="Randomize Array", command=lambda: randomize_array(canvas, ax), width=15).grid(row=0, column=1, padx=10, pady=10)
     tk.Button(control_frame, text="Sort", command=lambda: start_sorting_thread(algorithm.get(), data, canvas, ax), width=15).grid(row=0, column=2, padx=10, pady=10)
-    # pause_resume_button = tk.Button(control_frame, text="Pause/Resume", command=lambda: None, width=15)
-    # pause_resume_button.grid(row=0, column=3, padx=10, pady=10)
-    # tk.Button(control_frame, text="Stop", command=lambda: None, width=15).grid(row=0, column=4, padx=10, pady=10)
+    global toggle_pause_resume_button
+    toggle_pause_resume_button = tk.Button(control_frame, text="Pause", command=toggle_pause_resume, width=15)
+    toggle_pause_resume_button.grid(row=0, column=3, padx=10, pady=10)
 
     global sorting_thread
     sorting_thread = threading.Thread(target=start_sorting, args=(algorithm.get(), data, canvas, ax))
