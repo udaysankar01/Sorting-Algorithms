@@ -1,7 +1,10 @@
 import random
 
 def randomize():
-    return [random.randint(1, 100) for _ in range(50)]
+    print("Randomize button pressed!")
+    data = [random.randint(1, 100) for _ in range(50)]
+    print(data)
+    return data
 
 def plotData(data, colorArray, canvas, ax):
     ax.clear()
