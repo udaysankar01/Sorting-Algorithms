@@ -11,3 +11,8 @@
 
 ## Run the program
 `python main.py`
+
+## Sorting Algorithms Implmented so far
+
+1. Bubble Sort
+2. Insertion Sort
