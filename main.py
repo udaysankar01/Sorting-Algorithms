@@ -65,9 +65,9 @@ def main():
 
     # Dropdown menu for selecting the sorting algorithm
     algorithm = tk.StringVar()
-    algorithm.set("Bubble Sort")
+    algorithm.set("Merge Sort")
     dropdown = ttk.Combobox(control_frame, textvariable=algorithm, width=15)
-    dropdown['values'] = ("Bubble Sort", "Insertion Sort")
+    dropdown['values'] = ("Bubble Sort", "Insertion Sort", "Merge Sort")
     dropdown.grid(row=0, column=0, padx=10, pady=10)
 
     # Buttons for array manipulation and sorting

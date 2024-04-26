@@ -17,3 +17,4 @@ This is a personal project to implement various sorting algorithms in Python. Tk
 
 1. Bubble Sort
 2. Insertion Sort
+3. Merge Sort
