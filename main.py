@@ -1,3 +1,4 @@
+import time
 import random
 import tkinter as tk
 from tkinter import ttk
@@ -23,13 +24,23 @@ def main():
     canvas_widget = canvas.get_tk_widget()
     canvas_widget.pack(side=tk.BOTTOM, fil=tk.BOTH, expand=True)
 
-    # frame for the controls
-    frame = ttk.Frame(root)
-    frame.pack(side=tk.TOP)
+   # Frame for the controls
+    control_frame = ttk.Frame(root)
+    control_frame.pack(side=tk.TOP, fill=tk.Y, padx=15, pady=15)
 
-    # add buttons - randomize array, sort, pause/resume, stop
-    tk.Button(frame, text="Randomize Array", command=randomize).pack(side=tk.LEFT)
-    tk.Button(frame, text="Sort", command=lambda: start_sorting(algorithm="Bubble Sort", data=data)).pack(side=tk.LEFT)
+    # Dropdown menu for selecting the sorting algorithm
+    algorithm = tk.StringVar()
+    algorithm.set("Bubble Sort")
+    dropdown = ttk.Combobox(control_frame, textvariable=algorithm, width=15)
+    dropdown['values'] = ("Bubble Sort", "Insertion Sort")
+    dropdown.grid(row=0, column=0, padx=10, pady=10)
+
+    # Buttons for array manipulation and sorting
+    tk.Button(control_frame, text="Randomize Array", command=randomize, width=15).grid(row=0, column=1, padx=10, pady=10)
+    tk.Button(control_frame, text="Sort", command=lambda: start_sorting(algorithm.get(), data), width=15).grid(row=0, column=2, padx=10, pady=10)
+    pause_resume_button = tk.Button(control_frame, text="Pause/Resume", command=lambda: None, width=15)
+    pause_resume_button.grid(row=0, column=3, padx=10, pady=10)
+    tk.Button(control_frame, text="Stop", command=lambda: None, width=15).grid(row=0, column=4, padx=10, pady=10)
 
     root.mainloop()
 
