@@ -9,7 +9,7 @@ reset_event.clear()
 
 def randomize():
     print("Randomize button pressed!")
-    data = [random.randint(1, 100) for _ in range(200)]
+    data = [random.randint(1, 100) for _ in range(100)]
     return data
 
 def plotData(data, colorArray, canvas, ax, offset=0):

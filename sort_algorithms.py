@@ -10,11 +10,19 @@ def start_sorting(algorithm, data, canvas, ax, pause_event, reset_event, timeTic
         insertion_sort(data, canvas, ax, pause_event, reset_event, timeTick)
 
     elif algorithm == "Merge Sort":
-        for data in merge_sort(data, 0, len(data) - 1, pause_event, reset_event, timeTick):
+        for data in merge_sort(data, 0, len(data) - 1):
+            if not pause_event.is_set():
+                pause_event.wait()
+            if reset_event.is_set():
+                reset_event.clear()
+                return
             colorArray = ['gray' for x in range(len(data))]
             plotData(data, colorArray, canvas, ax)
             canvas.draw()
             time.sleep(timeTick)
+        colorArray = ['green' for x in range(len(data))]
+        plotData(data, colorArray, canvas, ax)
+        canvas.draw()
 
 
 def bubble_sort(data, canvas, ax, pause_event, reset_event, timeTick):
@@ -58,18 +66,13 @@ def insertion_sort(data, canvas, ax, pause_event, reset_event, timeTick):
     canvas.draw()
 
 
-def merge(data, p, q, r, pause_event, reset_event, timeTick):
+def merge(data, p, q, r):
     left = data[p:q+1]  # Includes the midpoint
     right = data[q+1:r+1]  # Goes up to r
     i = j = 0
     k = p
 
     while i < len(left) and j < len(right):
-        if not pause_event.is_set():
-            pause_event.wait()
-        if reset_event.is_set():
-            reset_event.clear()
-            return
         if left[i] <= right[j]:
             data[k] = left[i]
             i += 1
@@ -80,31 +83,21 @@ def merge(data, p, q, r, pause_event, reset_event, timeTick):
         yield data
 
     while i < len(left):
-        if not pause_event.is_set():
-            pause_event.wait()
-        if reset_event.is_set():
-            reset_event.clear()
-            return
         data[k] = left[i]
         i += 1
         k += 1
         yield data
 
     while j < len(right):
-        if not pause_event.is_set():
-            pause_event.wait()
-        if reset_event.is_set():
-            reset_event.clear()
-            return
         data[k] = right[j]
         j += 1
         k += 1
         yield data
 
-def merge_sort(data, p, r, pause_event, reset_event, timeTick):
+def merge_sort(data, p, r):
     if p < r:
         q = (p + r) // 2
-        yield from merge_sort(data, p, q, pause_event, reset_event, timeTick)
-        yield from merge_sort(data, q + 1, r, pause_event, reset_event, timeTick)
-        yield from merge(data, p, q, r, pause_event, reset_event, timeTick)
+        yield from merge_sort(data, p, q)
+        yield from merge_sort(data, q + 1, r)
+        yield from merge(data, p, q, r)
     yield data
