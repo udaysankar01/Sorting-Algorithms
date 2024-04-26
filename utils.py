@@ -4,10 +4,12 @@ import threading
 pause_event = threading.Event()
 pause_event.set()
 
+reset_event = threading.Event()
+reset_event.clear()
+
 def randomize():
     print("Randomize button pressed!")
     data = [random.randint(1, 100) for _ in range(50)]
-    print(data)
     return data
 
 def plotData(data, colorArray, canvas, ax):

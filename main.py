@@ -6,8 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from sort_algorithms import start_sorting
-from utils import randomize, plotData, pause_event
-
+from utils import randomize, plotData, pause_event, reset_event
 
 def toggle_pause_resume():
     global toggle_pause_resume_button
@@ -20,16 +19,27 @@ def toggle_pause_resume():
         toggle_pause_resume_button.config(text="Pause")
         print("Resume button pressed!")
 
+def reset(canvas, ax):
+    global data, sorting_thread, original_data
+    if sorting_thread.is_alive():
+        print("Reset button pressed!")
+        data = original_data.copy()
+        reset_event.set()
+    plotData(data=data, colorArray=['gray' for x in range(len(data))], canvas=canvas, ax=ax)
+    canvas.draw_idle()
+
 def randomize_array(canvas, ax):
-    global data
+    global data, original_data
     data = randomize()
     plotData(data=data, colorArray=['gray' for x in range(len(data))], canvas=canvas, ax=ax)
+    original_data = data.copy()
     canvas.draw_idle()
 
 def start_sorting_thread(algorithm, data, canvas, ax):
     global sorting_thread
     if not sorting_thread.is_alive():
-        sorting_thread = threading.Thread(target=start_sorting, args=(algorithm, data, canvas, ax, pause_event))
+        sorting_thread = threading.Thread(target=start_sorting, args=(algorithm, data, canvas, ax, pause_event, reset_event))
+        sorting_thread.daemon = True
         sorting_thread.start()
 
 def main():
@@ -48,8 +58,9 @@ def main():
     control_frame = ttk.Frame(root)
     control_frame.pack(side=tk.TOP, fill=tk.Y, padx=15, pady=15)
 
-    global data
+    global data, original_data
     data = randomize()
+    original_data = data.copy()
     plotData(data=data, colorArray=['gray' for x in range(len(data))], canvas=canvas, ax=ax)
 
     # Dropdown menu for selecting the sorting algorithm
@@ -65,6 +76,7 @@ def main():
     global toggle_pause_resume_button
     toggle_pause_resume_button = tk.Button(control_frame, text="Pause", command=toggle_pause_resume, width=15)
     toggle_pause_resume_button.grid(row=0, column=3, padx=10, pady=10)
+    tk.Button(control_frame, text="Reset", command=lambda: reset(canvas, ax), width=15).grid(row=0, column=4, padx=10, pady=10)
 
     global sorting_thread
     sorting_thread = threading.Thread(target=start_sorting, args=(algorithm.get(), data, canvas, ax))
