@@ -19,3 +19,4 @@ This is a personal project to implement various sorting algorithms in Python. Tk
 2. Selection Sort
 3. Insertion Sort
 4. Merge Sort
+5. Quick Sort
